@@ -1,7 +1,7 @@
 ---
 layout: default
 title:  "Let's Solve Project Euler Problem 3"
-date:   2017-6-13 10:00:00 -0800
+date:   2017-6-13 12:00:00 -0800
 ---
 Wow, *THREE* posts in one day?
 
@@ -125,6 +125,6 @@ Well, that's an entirely different tier of improvement!
 
 Let's try it with our large input (600851475143).
 average iteration:
-0.1238499999999999
+0.1238499999999999 ms
 
 Well it looks like our final solution works faster on the 12 digit input than our initial solution did on the 5 digit input. I'll call that an improvement.
