@@ -18,7 +18,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 
 There are two immediately obvious approaches.
 
-1. Iterate from 1-1000 (inclusive), modulus, and sum
+1. Iterate from 1-1000 (exclusive), modulus, and sum
    * Iterates once through all the items
    * Checks modulus of 3 && 5 on each element
    * Sums as we proceed

@@ -12,7 +12,7 @@ Wow, *THREE* posts in one day?
 Well, 600851475143 is a pretty large number, but it doesn't require any special coercions yet. 12 digits is reasonable.
 
 #### The Fool begins his journey
-Oh Oh, I know, I know! Let's just do an iteration, modulus, check primality, and store the highest! Maybe something like...
+Oh, Oh, I know, I know! Let's just do an iteration, modulus, check primality, and store the highest! Maybe something like...
 
 {% highlight javascript %}
   function isPrime(n){
@@ -115,8 +115,8 @@ Why not just find the prime factors directly?
   * There is no way ∃ n ∋ k/2 < n < k && k % n == 0 where n and k are integers.
 2. i will iterate until half of n, bumping into all of the factors along the way.
   * Starting the count at 2, we ensure all the small primes are removed first. 10/2 == 5.
-  * Removing factors significantly reduces the number of iterations required (10000 / 2 = 5000, we've already split the numbers we must iterate through in half!)
-  * By removing every factor incrementally, we can ensure there is no smaller i for which n is divisible. 20 is divisible by 10, but it's also divisible by 2. 20 / 2 = 10 --> 10 / 2 = 5 --> any non-prime number won't appear.
+  * Removing factors significantly reduces the number of iterations required (10000 / 2 == 5000, we've already split the numbers we must iterate through in half!)
+  * By removing every factor incrementally, we can ensure there is no smaller i for which n is divisible. 20 is divisible by 10, but it's also divisible by 2. 20 / 2 == 10 --> 10 / 2 == 5 --> any non-prime number won't appear.
 
 For the same input (13195), the average iteration took:
 0.0012000000000000454 ms

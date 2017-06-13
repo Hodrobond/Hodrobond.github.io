@@ -54,3 +54,5 @@ I propose an iterative solution. Keeping track of the current and previous fibon
   }
   return sum;
 {% endhighlight %}
+
+We don't actually have any use for any fibonacci number other than "is this one even? Let's add it to the sum" and "Let's add the last one to this one to get the next one!".
