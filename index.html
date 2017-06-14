@@ -2,13 +2,19 @@
 layout: default
 ---
 <div id="home">
-  <h1>Blog Posts</h1>
-  <ul class="posts">
-    {% for post in site.posts %}
+  <h1>Puzzles, Math Problems, and other fun things!</h1>
+  <ul class="project-euler">
+    {% for post in site.categories.project_euler %}
       <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
-  <h1>Fun</h1>
+  <h1>Blog Posts</h1>
+  <ul class="posts">
+    {% for post in site.categories.blog %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+  <h1>Recreating Games - Can I make a computer smarter than me?</h1>
   <ul class='projects'>
     <li><a href="https://hodrobond.github.io/learning2048/">This one time I practiced React</a></li>
   </ul>
