@@ -113,7 +113,7 @@ $$n + 2\binom{n}{3} + 3\binom{n}{2} = n + 2\frac{n!}{3! * (n - 3)!} + 3\frac{n!}
 
 Testing that with `n = 10` we get the expected `385`. Alrighty, Sum of Squares boiled down to math.
 
-Time for the Square of Sums! Let's start here:
+Time for the Square of Sums! Let's start [here](https://math.stackexchange.com/a/329357):
 
 $$\begin{array}{ccl}
 \left(\sum\limits_{j=0}^{n-1}Z_j\right)^2&=&\left(\sum\limits_{i=0}^{n-1}Z_i\right)\left(\sum\limits_{j=0}^{n-1}Z_j\right)\\
