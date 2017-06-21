@@ -38,7 +38,7 @@ Nothing we haven't seen before, two immediate approaches:
 
 Average of 1000 iterations is: 1139.2023500000003 ms.
 
-* [Sieve of Erasthones](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
+* [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
 {% highlight javascript %}
   function sievePrimes(n){
     var arr = [];

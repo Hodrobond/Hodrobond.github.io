@@ -40,7 +40,7 @@ The average from 100 iterations took
 Well, that's taking quite a while and we still have 7 more digits to add! Let's see if we can find something better!
 
 #### The Fool meets the Magician
-Let's try using that [Sieve of Erasthones](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) I like so much. Will the right tool help?
+Let's try using that [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) I like so much. Will the right tool help?
 
 {% highlight javascript %}
   function sievePrimes(n){

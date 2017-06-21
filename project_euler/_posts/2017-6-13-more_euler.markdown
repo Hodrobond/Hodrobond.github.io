@@ -36,7 +36,7 @@ or if you're fancy:
 
 Ignoring the call stack issues for larger numbers we can solve using setTimeout, retrieving all of the subsequent fibonacci numbers this way seems...inefficient. If I get the 6th fibonacci number then the 7th, it will recalculate all of the previous numbers.
 
-I propose an iterative solution. Keeping track of the current and previous fibonacci numbers (I love the [Sieve of Erasthones](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) but it just doesn't cut it here. We won't know the maximum value of the prime we need unless we do some intricate mathematical analysis or by testing to get the value explicitly)
+I propose an iterative solution. Keeping track of the current and previous fibonacci numbers (I love the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) but it just doesn't cut it here. We won't know the maximum value of the prime we need unless we do some intricate mathematical analysis or by testing to get the value explicitly)
 
 {% highlight javascript %}
   var maxFibonacciValue = 4000000;
