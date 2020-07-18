@@ -1,0 +1,113 @@
+---
+layout: default
+title:  "Why is a++ + + ++b valid?"
+date:   2017-6-25 10:00:00 -0800
+---
+<style>
+  .markdown-body td:first-child{
+    width: 40%;
+  }
+</style>
+
+### + and Strings
+
+Let's assume we're already familiar with such general arithmetic as `1+2` and `"chocolate chip"+" cookie"`.
+
+Let's look at what the following statements evaluate to, and more importantly *why*:
+
+{%  highlight javascript %}
+  2 + 2; //4
+  2 + "2"; //"22"
+  "2" + 2; //"22"
+  2 + + "2"; //4
+  "2" + + 2; //"22"
+  +"2" + 2; //4
+  2 ++ "2" //Uncaught ReferenceError
+  2++ //Uncaught ReferenceError
+  var a = 2; a++; //2, a=3
+  var a = 2; ++a; //3, a=3
+{% endhighlight %}
+
+We might want to reference [some documentation](http://www.ecma-international.org/publications/files/ECMA-ST-ARCH/ECMA-262,%201st%20edition,%20June%201997.pdf#page=55) about what is going on here, we particularly care about:
+
+>The addition operator either performs string concatenation or numeric addition.
+The production AdditiveExpression : AdditiveExpression + MultiplicativeExpression is evaluated as follows:
+
+
+Evaluation Command | Explanation
+--- | ---
+1. Evaluate AdditiveExpression. <br/>2. Call GetValue(Result(1)).<br/>3. Evaluate MultiplicativeExpression.<br/>4. Call GetValue(Result(3)).<br/>5. Call ToPrimitive(Result(2)).<br/>6. Call ToPrimitive(Result(4)). | In `a+b`, we are evaluating `a` & `b`, getting their values, and storing it as one of the [Primitives](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) ([String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String), [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean), [Symbol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol), [undefined](https://developer.mozilla.org/en-US/docs/Glossary/undefined), or [null](https://developer.mozilla.org/en-US/docs/Glossary/null))
+--- | ---
+7. If Type(Result(5)) is String or Type(Result(6)) is String, go to step 12. (Note that this step differs from step 3 in the algorithm for comparison for the relational operators in using or instead of and.) | If either `a` or `b` ends up being a String, we've got special instructions at step 12.
+--- | ---
+8. Call ToNumber(Result(5)). <br/>9. Call ToNumber(Result(6)). | [Follow toNumber documentation to  see what we get](http://www.ecma-international.org/ecma-262/6.0/#sec-tonumber).<br/>Number: The number itself<br/>Boolean: 1 if true, 0 if false<br/> Symbol: TypeError exception<br/>undefined: NaN<br/>null: +0
+--- | ---
+10. Apply the addition operation to Result(8) and Result(9). See the discussion below (11.6.3).<br/>11. Return Result(10). | Mathematically evaluate the addition of two numbers<br/>(Let's assume it worked out without issues).
+--- | ---
+12. Call ToString(Result(5)).<br/>13. Call ToString(Result(6)).<br/>14. Concatenate Result(12) followed by Result(13).<br/>15. Return Result(14). | Convert `a` and `b` to Strings, then concatenate<br/>("2" + "2" = "22")<br/>("a"+"b"="ab")
+--- | ---
+
+So it looks like there are two larger subsets of addition: Numeric and String.<br/>
+Let's look at the previous examples and figure out what type of addition they were:
+
+{% highlight javascript %}
+  2 + 2; //4, Number + Number, Numeric Addition
+  2 + "2"; //"22", Number + String, String Addition
+  "2" + 2; //"22", String + Number, String Addition
+  2 + + "2"; //4, Number + (Number)String, Numeric Addition
+  "2" + + 2; //"22", String + (Number)String, String Addition
+  +"2" + 2; //4, (Number)String + Number, Numeric Addition
+{% endhighlight %}
+
+Woah woah woah there, what's the (Number)String mean? Well, [The unary + operator converts its operand to Number type](http://es5.github.io/#x11.4.6), which means a unary positive can convert a String to a Number! So
+
+{% highlight javascript %}
+  typeof 2; //"number"
+  typeof "2"; //"string"
+  typeof +"2"; //"number"
+  +"2" === 2; //true!
+{% endhighlight %}
+
+### What about that ++ thing?
+
+We should probably discuss the [++ operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Increment) as well. It adds one to the operator and then returns a value in two flavors:
+
+Prefix:
+{% highlight javascript %}
+  var x = 2;
+  var y = ++x; //x === 3, y === 3
+{% endhighlight %}
+Postfix:
+{% highlight javascript %}
+  var x = 2;
+  var y = x++; //x === 3, y === 2
+{% endhighlight %}
+
+### So why is a++ + + ++b valid?
+
+Let's break it down:
+
+{% highlight javascript %}
+  var a = "2";
+  var b = "4";
+  var c = a++ + + ++b;
+{% endhighlight %}
+
+Is equivalent to:
+
+{% highlight javascript %}
+  var a = "2";
+  var b = "4";
+  var c = (a++) + (+ (++b));
+{% endhighlight %}
+
+Which can be rewritten as:
+
+{% highlight javascript %}
+  var a = "2";
+  var b = "4";
+  var aPostIncremented = a++; //a === 3, aPostIncremented === 2
+  var bPreIncremented = ++b; //b === 5, bPreIncremented === 5
+  var positiveBPreIncremented = +b; // +5
+  var c = aPostIncremented + positiveBPreIncremented; // 2 + 5 === 7
+{% endhighlight %}
