@@ -13,6 +13,7 @@ module.exports = {
     },
   },
   plugins: [
+    `gatsby-plugin-styled-components`,
     `@hodrobond/ui-sidebar`,
     {
       resolve: `gatsby-source-filesystem`,
