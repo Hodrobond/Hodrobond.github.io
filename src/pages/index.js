@@ -23,7 +23,7 @@ const BlogIndex = ({ data, location }) => {
             text: node.frontmatter.title || node.fields.slug,
             link: node.fields.slug,
           }}
-          date={node.frontmatter.date}
+          date={new Date(node.frontmatter.date)}
           description={node.frontmatter.description || node.excerpt}
         />
     ))}
