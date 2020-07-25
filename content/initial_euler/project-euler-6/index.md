@@ -4,7 +4,7 @@ date: "2017-06-16T01:00:00.000Z"
 description: Euler Problem 6
 ---
 
-We need [MathJax](https://www.mathjax.org/) Today for rendering our equations.
+We need [Katex](https://katex.org//) Today for rendering our equations.
 
 ### Sum square difference
 >The sum of the squares of the first ten natural numbers is,
@@ -115,7 +115,8 @@ Testing that with `n = 10` we get the expected `385`. Alrighty, Sum of Squares b
 
 Time for the Square of Sums! Let's start [here](https://math.stackexchange.com/a/329357):
 
-$$\begin{array}{ccl}
+$$
+\begin{array}{ccl}
 \left(\sum\limits_{j=0}^{n-1}Z_j\right)^2&=&\left(\sum\limits_{i=0}^{n-1}Z_i\right)\left(\sum\limits_{j=0}^{n-1}Z_j\right)\\
 &=&\sum\limits_{j=0}^{n-1}Z_j\left(Z_j+\sum\limits_{j\neq i}Z_i\right)\\
 &=&\sum\limits_{j=0}^{n-1}Z_j^2+\sum\limits_{j\neq i}Z_iZ_j\\
