@@ -13,18 +13,18 @@ Let's figure out what we need to do: A palindromic number reads the same both wa
 
 If we happen to take that at face value, we might get something along the lines of:
 
-{% highlight javascript %}
-  function isPalindrome(n){
-    if(typeof n == "number")
-      n = n.toString();
-    return n == n.split("").reverse().join("");
-  }
-{% endhighlight %}
+```javascript
+function isPalindrome(n){
+  if(typeof n == "number")
+    n = n.toString();
+  return n == n.split("").reverse().join("");
+}
+```
 
 Or if we decide we will only have string inputs and we're feeling fancy/concise, we can use a one-liner:
-{% highlight javascript %}
-  const isPalindrome = (n) => {return n == n.split("").reverse().join("");}
-{% endhighlight %}
+```javascript
+const isPalindrome = (n) => {return n == n.split("").reverse().join("");}
+```
 
 So we put our string down, split it, and reverse it. Then rejoin the array and compare it to the old one.
 Let's just take a quick cursory examination of each of those tasks.
@@ -50,26 +50,26 @@ We were taking the entire word, reversing it, and comparing it against itself.
 It sounds like we don't need to read the string more than once though...
 Can we just iterate the string and compare the paired end values? (compare the first and last, then second and second from last, etc)
 
-{% highlight javascript %}
-  function isPalindrome(n){
-    for(var i=0; i<n.length - 1; i++){
-      if(n[i] !== n[n.length - 1 - i])
-        return false;
-    }
-    return true;
+```javascript
+function isPalindrome(n){
+  for(var i=0; i<n.length - 1; i++){
+    if(n[i] !== n[n.length - 1 - i])
+      return false;
   }
-{% endhighlight %}
+  return true;
+}
+```
 
 Alrighty, now we're getting somewhere. Iterating the length of the string once. But we're still comparing each set of values twice! We're comparing the first and last indexes on the first and last iteration! We don't even need to iterate through the entire string! Just iterate through half and compare to the other half; if the number has an odd number of digits then the middle value is moot because it will always be equal to itself (101, 1 == 1, 0 will always equal itself, regardless of what value it takes)!
 
-{% highlight javascript %}
-  function isPalindrome(n){
-    for(var i=0, l=Math.floor(n/2); i<l; i++){
-      if(n[i] !== n[n.length - 1 - i])
-        return false;
-    }
-    return true;
+```javascript
+function isPalindrome(n){
+  for(var i=0, l=Math.floor(n/2); i<l; i++){
+    if(n[i] !== n[n.length - 1 - i])
+      return false;
   }
-{% endhighlight %}
+  return true;
+}
+```
 
 [Here](https://hodrobond.github.io/project-euler/docs/0001_0010/0004.html) is an example which I hope generally illustrates the difference between the first and last approaches.

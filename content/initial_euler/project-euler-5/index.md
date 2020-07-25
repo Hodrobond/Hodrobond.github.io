@@ -10,19 +10,19 @@ What is the smallest positive number that is evenly divisible by all of the numb
 Brute Force:<br/>
 Iterate i to n until a number is divisible by 1-20! Let's test it with our sample input first, the numbers up to 10.
 
-{% highlight javascript %}
-  function getLowest(){
-    var limit = 10;
-    while(true){
-      for(var j=1; j<=limit; j++){
-        if(i%j !== 0)
-          break;
-        if(j === limit)
-          return i;
-      }
+```javascript
+function getLowest(){
+  var limit = 10;
+  while(true){
+    for(var j=1; j<=limit; j++){
+      if(i%j !== 0)
+        break;
+      if(j === limit)
+        return i;
     }
   }
-{% endhighlight %}
+}
+```
 
 Well. It works! Slowly, but surely. If we want to find the numbers divisible by 1-40 we may very well be waiting until the heat death of the universe. There's nothing inherently *wrong* with this approach per se. If I forgot someone's phone number I *could* call every phone number until I find them, it'll take a while but it'll work.
 
@@ -60,28 +60,28 @@ Well, it looks like if we take the collection of unique prime numbers (`[2, 3]` 
 
 So what might the code look like?
 
-{% highlight javascript %}
-  function getSolution(){    
-    var n = 20;
-    var factors = [];
-    for(var i=2; i<=n; i++){
-      var fact = getPrimeFactors(i);
-      var tempFactors = factors.slice();
-      for(var j=0; j<fact.length;j++){
-        var index = tempFactors.indexOf(fact[j]);
-        if(index > -1){
-          tempFactors.splice(index,1);
-        }
-        else{
-          factors.push(fact[j]);
-        }
+```javascript
+function getSolution(){    
+  var n = 20;
+  var factors = [];
+  for(var i=2; i<=n; i++){
+    var fact = getPrimeFactors(i);
+    var tempFactors = factors.slice();
+    for(var j=0; j<fact.length;j++){
+      var index = tempFactors.indexOf(fact[j]);
+      if(index > -1){
+        tempFactors.splice(index,1);
+      }
+      else{
+        factors.push(fact[j]);
       }
     }
-    return factors.reduce(function(acc, val, index, arr){
-      return acc * val;
-    });
   }
-{% endhighlight %}
+  return factors.reduce(function(acc, val, index, arr){
+    return acc * val;
+  });
+}
+```
 
 Store all the unique factors in an array, get the product using an [Array.prototype.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce?v=control).
 

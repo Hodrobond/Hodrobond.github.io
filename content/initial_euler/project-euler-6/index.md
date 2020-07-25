@@ -17,37 +17,37 @@ Find the difference between the sum of the squares of the first one hundred natu
 First things first for 1-10:<br/>
 Sum of Squares: `1^2 + 2^2 + 3^2 + 4^2 + 5^2 + 6^2 + 7^2 + 8^2 + 9^2 + 10^2 = 385`
 
-{% highlight javascript %}
-  function getSumOfSquares(n){
-    var product = 0;
-    for(var i=0; i<=n; i++){
-      product += (i*i);
-    }
-    return product;
+```javascript
+function getSumOfSquares(n){
+  var product = 0;
+  for(var i=0; i<=n; i++){
+    product += (i*i);
   }
-{% endhighlight %}
+  return product;
+}
+```
 
 Square of Sums `(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10)^2 = 3025`:
-{% highlight javascript %}
-  function getSquareOfSum(n){
-    var sum = 0;
-    for(var i=0; i<=n; i++){
-      sum += i;
-    }
-    return (sum*sum);
+```javascript
+function getSquareOfSum(n){
+  var sum = 0;
+  for(var i=0; i<=n; i++){
+    sum += i;
   }
-{% endhighlight %}
+  return (sum*sum);
+}
+```
 
 The brute force is pretty simple:
 
-{% highlight javascript %}
-  function getSolution(){
-    var n = 100;
-    var sumOfSquares = getSumOfSquares(n);
-    var squareOfSums = getSquareOfSum(n);
-    return (squareOfSums - sumOfSquares);
-  }
-{% endhighlight %}
+```javascript
+function getSolution(){
+  var n = 100;
+  var sumOfSquares = getSumOfSquares(n);
+  var squareOfSums = getSquareOfSum(n);
+  return (squareOfSums - sumOfSquares);
+}
+```
 
 But that's not why we're here. We want to know the magic. Please Math, tell us your secrets!
 

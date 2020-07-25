@@ -20,42 +20,42 @@ What is the value of the first triangle number to have over five hundred divisor
 
 Well, we have our handy-dandy getFactors function:
 
-{% highlight javascript %}
-  function getFactors(n){
-    let arr = [1],
-      i = 2,
-      max = Math.floor(Math.sqrt(n));
+```javascript
+function getFactors(n){
+  let arr = [1],
+    i = 2,
+    max = Math.floor(Math.sqrt(n));
 
-    while (i < max) {
-      if (n % i === 0) {
-        arr.push(i);
-        let k = n / i;
-        if (i !== k) {
-          arr.push(k);
-        }
-        max = k;
+  while (i < max) {
+    if (n % i === 0) {
+      arr.push(i);
+      let k = n / i;
+      if (i !== k) {
+        arr.push(k);
       }
-      i++;
+      max = k;
     }
-    return arr.sort((a, b) => a - b);
+    i++;
   }
-{% endhighlight %}
+  return arr.sort((a, b) => a - b);
+}
+```
 
 So what happens if we try to brute force it?
 
-{% highlight javascript %}
-  function getSolution() {
-    var n = 500;
-    var x = 0,
-      y = 1;
+```javascript
+function getSolution() {
+  var n = 500;
+  var x = 0,
+    y = 1;
 
-    while (getFactors(x).length <= n) {
-      x += y;
-      y++;
-    }
-    return x
+  while (getFactors(x).length <= n) {
+    x += y;
+    y++;
   }
-{% endhighlight %}
+  return x
+}
+```
 
 Alright, now what's the fun way? Is there a jetpack that can boost us to the last step? No? Alright, let's go slowly! getFactors is fine for now, we're only iterating until the square root of the number, not much to optimize there.
 
@@ -114,47 +114,47 @@ That leaves us with:
 
 Alrighty, so our sieve will look something like:
 
-{% highlight javascript %}
-  function sievePrimesAtkin(max){
-    var sieve = [];
-    var sqrtMax = Math.sqrt(max);
+```javascript
+function sievePrimesAtkin(max){
+  var sieve = [];
+  var sqrtMax = Math.sqrt(max);
 
-    for(var i=0; i<max; i++){
-      sieve[i] = false;
-    }
-    sieve[0] = false;
-    sieve[1] = false;
-    sieve[2] = true;
-    sieve[3] = true;
-
-    for(var i=1; i<=sqrtMax; i++){
-      for(var j=1; j<sqrtMax; j++){
-        var n = (4 * i * i) + (j * j);
-        if(n <= max && (n % 12 === 1 || n % 12 === 5))
-          sieve[n] = !sieve[n];
-        n = (3 * i * i) + (j * j);
-        if(n <= max && (n % 12 === 7))
-          sieve[n] = !sieve[n];
-        n = (3 * i * i) - (j * j);
-        if(i > j && n <= max && (n % 12 === 11))
-          sieve[n] = !sieve[n]
-      }
-    }
-    for(var i=5; i<=sqrtMax; i++){
-      if(sieve[i]){
-        var nSq = i * i;
-        for(var j=nSq; j<=max; j+=nSq)
-          sieve[j] = false;
-      }
-    }
-    var primes = [];
-    for(var i=0; i<max; i++){
-      if(sieve[i] === true)
-        primes.push(i);
-    }
-    return primes;
+  for(var i=0; i<max; i++){
+    sieve[i] = false;
   }
-{% endhighlight %}
+  sieve[0] = false;
+  sieve[1] = false;
+  sieve[2] = true;
+  sieve[3] = true;
+
+  for(var i=1; i<=sqrtMax; i++){
+    for(var j=1; j<sqrtMax; j++){
+      var n = (4 * i * i) + (j * j);
+      if(n <= max && (n % 12 === 1 || n % 12 === 5))
+        sieve[n] = !sieve[n];
+      n = (3 * i * i) + (j * j);
+      if(n <= max && (n % 12 === 7))
+        sieve[n] = !sieve[n];
+      n = (3 * i * i) - (j * j);
+      if(i > j && n <= max && (n % 12 === 11))
+        sieve[n] = !sieve[n]
+    }
+  }
+  for(var i=5; i<=sqrtMax; i++){
+    if(sieve[i]){
+      var nSq = i * i;
+      for(var j=nSq; j<=max; j+=nSq)
+        sieve[j] = false;
+    }
+  }
+  var primes = [];
+  for(var i=0; i<max; i++){
+    if(sieve[i] === true)
+      primes.push(i);
+  }
+  return primes;
+}
+```
 
 Now let's compare our runtimes, on an average of 100 runs to sieve up to 2 million I got:<br/>
 Eratosthenes: 181.94400000000002 ms<br/>
@@ -164,37 +164,37 @@ They're comparable, and as it turns out Atkin is pretty reliant upon those small
 
 Some hills down, let's start up the next. We've got our tools, time to combine them!
 
-{% highlight javascript %}
-  function triangleTest(){
-    var t=1;
-    var a=1;
-    var count=0;
-    var tt, i, exponent;
-    var primeSieve = sievePrimesAtkin(65500);
-    while(count <= 500){
-      count = 1;
-      a += 1;
-      t += a;
-      tt = t;
-      for(var i=0; i<primeSieve.length; i++){
-        if(primeSieve[i] * primeSieve[i] > tt){
-          count *= 2;
-          break;
-        }
-        exponent = 1;
-        while(tt % primeSieve[i] == 0){
-          exponent++;
-          tt = tt/primeSieve[i];
-        }
-        if(exponent > 1)
-          count = count * exponent;
-        if(tt == 1)
-          break;
+```javascript
+function triangleTest(){
+  var t=1;
+  var a=1;
+  var count=0;
+  var tt, i, exponent;
+  var primeSieve = sievePrimesAtkin(65500);
+  while(count <= 500){
+    count = 1;
+    a += 1;
+    t += a;
+    tt = t;
+    for(var i=0; i<primeSieve.length; i++){
+      if(primeSieve[i] * primeSieve[i] > tt){
+        count *= 2;
+        break;
       }
+      exponent = 1;
+      while(tt % primeSieve[i] == 0){
+        exponent++;
+        tt = tt/primeSieve[i];
+      }
+      if(exponent > 1)
+        count = count * exponent;
+      if(tt == 1)
+        break;
     }
-    return t;
   }
-{% endhighlight %}
+  return t;
+}
+```
 
 Comparisons of runtimes:
 
@@ -212,40 +212,40 @@ We also know that `n` and `n+1` are coprime (no common prime factors). So the nu
 
 Sounds like if we're dealing with the divisors themselves, it should be quicker than dealing with the larger triangle numbers. We can additionally use a smaller prime number for the sieve.
 
-{% highlight javascript %}
-  function triangleImproved() {
-    var n = 3;
-    var Dn = 2;
-    var primeDivisors = 2;
-    var count = 0;
-    var n1, Dn1, i, exponent;
-    var primeSieve = sievePrimesAtkin(1000);
-    while (count <= 500) {
-      n += 1;
-      n1 = n;
-      if (n1 % 2 === 0)
-        n1 = n1 / 2;
-      Dn1 = 1;
-      for (var i = 0; i < primeSieve.length; i++) {
-        if (primeSieve[i] * primeSieve[i] > n1) {
-          Dn1 *= 2;
-          break;
-        }
-        exponent = 1;
-        while (n1 % primeSieve[i] === 0) {
-          exponent++;
-          n1 = n1 / primeSieve[i];
-        }
-        if (exponent > 1)
-          Dn1 = Dn1 * exponent;
-        if (n1 == 1)
-          break;
+```javascript
+function triangleImproved() {
+  var n = 3;
+  var Dn = 2;
+  var primeDivisors = 2;
+  var count = 0;
+  var n1, Dn1, i, exponent;
+  var primeSieve = sievePrimesAtkin(1000);
+  while (count <= 500) {
+    n += 1;
+    n1 = n;
+    if (n1 % 2 === 0)
+      n1 = n1 / 2;
+    Dn1 = 1;
+    for (var i = 0; i < primeSieve.length; i++) {
+      if (primeSieve[i] * primeSieve[i] > n1) {
+        Dn1 *= 2;
+        break;
       }
-      count = Dn * Dn1;
-      Dn = Dn1;
+      exponent = 1;
+      while (n1 % primeSieve[i] === 0) {
+        exponent++;
+        n1 = n1 / primeSieve[i];
+      }
+      if (exponent > 1)
+        Dn1 = Dn1 * exponent;
+      if (n1 == 1)
+        break;
     }
-    return n * (n - 1) / 2;
+    count = Dn * Dn1;
+    Dn = Dn1;
   }
-{% endhighlight %}
+  return n * (n - 1) / 2;
+}
+```
 
 For this improved version we have an average runtime of: 1.43 ms, which appears to be more than 100x faster than our initial brute force attempt.

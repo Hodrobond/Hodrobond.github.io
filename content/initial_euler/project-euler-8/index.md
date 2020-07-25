@@ -48,27 +48,26 @@ Find the thirteen adjacent digits in the 1000-digit number that have the greates
 So we want the largest product of 13 adjacent digits. This seems pretty simple, since they're adjacent we only need to iterate the string once.
 I was considering maintaining an ongoing product (if we have a large input and want to retrieve a large number of subsequent digits recalculating the product each iteration may be unnecessary), but 0 throws a monkey wrench in that plan. We'll see if Euler forces us to revisit that.
 
-{% highlight javascript %}
-  function getSolution(input){
-    var n = 13;
-    input = input.split("");
-    var currentLargest = 0;
-    var stack = input.slice(0,n);
-    var product = stack.reduce(function(acc, val, index, arr){
-      return acc *= val;
-    })
-    for(var i=n; i<input.length; i++){
-      if(product > currentLargest){
-        currentLargest = product;
-      }
-      product = product / stack.shift();
-      product *= input[i];
-      stack.push(input[i]);
+```javascript
+function getSolution(input){
+  var n = 13;
+  input = input.split("");
+  var currentLargest = 0;
+  var stack = input.slice(0,n);
+  var product = stack.reduce(function(acc, val, index, arr){
+    return acc *= val;
+  })
+  for(var i=n; i<input.length; i++){
+    if(product > currentLargest){
+      currentLargest = product;
     }
-    return currentLargest;
+    product = product / stack.shift();
+    product *= input[i];
+    stack.push(input[i]);
   }
-
-{% endhighlight %}
+  return currentLargest;
+}
+```
 
 <div id="example-anchor" class="number-block"></div>
 <div id="current-anchor"></div>

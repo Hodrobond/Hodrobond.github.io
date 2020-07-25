@@ -117,13 +117,13 @@ description: Euler Problem 13
 
 Naturally, brute force is just adding the numbers together. Assuming the numbers are stored in an array `arr`:
 
-{% highlight javascript %}
-  var sum = 0;
-  for(var i=0; i<arr.length; i++){
-    sum += arr[i];
-  }
-  console.log(sum);
-{% endhighlight %}
+```javascript
+var sum = 0;
+for(var i=0; i<arr.length; i++){
+  sum += arr[i];
+}
+console.log(sum);
+```
 
 And we get...5.537376230390877e+51. Well, it's a large number. We only need the first 10 digits though, we don't need a BigInt library yet!
 
@@ -132,31 +132,31 @@ But we're here to take the more difficult route which hopefully results in more 
 Let's just start with the top two numbers: `37107287533902102798797998220837590246510135740250`, and `46376937677490009712648124896970078050417018260538`, and we hope to receive `83484225211392112511446123117807668296927154000788`.<br/>
 Let's also just start with a nice, naive, elementary approach. We'll split strings into arrays, and sum the numbers keeping track of carryovers!
 
-{% highlight javascript %}
-  function addLargeNumbers(a,b){
-    var maxLength = Math.max(a.length, b.length);
-    var sum = new Array(maxLength);
-    var carryover = 0;
-    for(var i=0; i < maxLength; i++){
-      var firstNum = +a[a.length - i - 1] || 0;
-      var secondNum = +b[b.length - i - 1] || 0;
-      var tempSum = firstNum + secondNum + carryover;
-      carryover = tempSum > 9 ? Math.floor(tempSum/10) : 0;
-      sum[sum.length - i - 1] = tempSum % 10;
-    }
-    if(carryover > 0)
-      sum.unshift(carryover);
-
-    var stringSum = "";
-    for(var i=0; i<sum.length; i++){
-      stringSum += sum[i];
-    }
-    return stringSum;
+```javascript
+function addLargeNumbers(a,b){
+  var maxLength = Math.max(a.length, b.length);
+  var sum = new Array(maxLength);
+  var carryover = 0;
+  for(var i=0; i < maxLength; i++){
+    var firstNum = +a[a.length - i - 1] || 0;
+    var secondNum = +b[b.length - i - 1] || 0;
+    var tempSum = firstNum + secondNum + carryover;
+    carryover = tempSum > 9 ? Math.floor(tempSum/10) : 0;
+    sum[sum.length - i - 1] = tempSum % 10;
   }
+  if(carryover > 0)
+    sum.unshift(carryover);
 
-  var a = "37107287533902102798797998220837590246510135740250";
-  var b = "46376937677490009712648124896970078050417018260538";
-  console.log(addLargeNumbers(a,b));
-{% endhighlight %}
+  var stringSum = "";
+  for(var i=0; i<sum.length; i++){
+    stringSum += sum[i];
+  }
+  return stringSum;
+}
+
+var a = "37107287533902102798797998220837590246510135740250";
+var b = "46376937677490009712648124896970078050417018260538";
+console.log(addLargeNumbers(a,b));
+```
 
 I was confident we could explain addition to a 6-year-old, but now it looks like we can explain it to a computer as well.

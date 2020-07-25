@@ -13,20 +13,20 @@ Find the product $$a * b * c$$.
 
 Brute force: Iterate two loops from 1-1000. Take the square root of the sum of their squares, verify it's a whole number. if A, B, and C sum to 1000, you're done!
 
-{% highlight javascript %}
-  function getSolution() {
-    for(var i=1; i<1000; i++){
-      for(var j=1; j<1000; j++){
-        var k = Math.sqrt(i*i+j*j);
-        if( k === Math.floor(k) && k<1000){
-          if(i+j+k === 1000){
-            return i*j*k
-          }
+```javascript
+function getSolution() {
+  for(var i=1; i<1000; i++){
+    for(var j=1; j<1000; j++){
+      var k = Math.sqrt(i*i+j*j);
+      if( k === Math.floor(k) && k<1000){
+        if(i+j+k === 1000){
+          return i*j*k
         }
       }
     }
   }
-{% endhighlight %}
+}
+```
 
 Elegant sidestep: $$a^2 + b^2 = c^2$$ and $$a + b + c = 1000$$ are given.<br/>
 Let's do a substitution for $$a=2mn$$<br/>

@@ -1,6 +1,6 @@
 ---
 title: Let's Solve Project Euler Problem 3
-date: "2017-06-13T20:00:00.000Z"
+date: "2017-06-13T21:00:00.000Z"
 description: Euler Problem 3
 ---
 Wow, *THREE* posts in one day?
@@ -14,23 +14,23 @@ Well, 600851475143 is a pretty large number, but it doesn't require any special 
 #### The Fool begins his journey
 Oh, Oh, I know, I know! Let's just do an iteration, modulus, check primality, and store the highest! Maybe something like...
 
-{% highlight javascript %}
-  function isPrime(n){
-    for(var i=2; i<n; i++){
-      if(n % i === 0)
-        return false
-    }
-    return true;
+```javascript
+function isPrime(n){
+  for(var i=2; i<n; i++){
+    if(n % i === 0)
+      return false
   }
-  function getLargestPrimeFactor(n){
-    var largest = 0;
-    for(var i=0; i<n; i++){
-      if(n % i === 0 && isPrime(i))
-        largest = i;
-    }
-    return largest;
+  return true;
+}
+function getLargestPrimeFactor(n){
+  var largest = 0;
+  for(var i=0; i<n; i++){
+    if(n % i === 0 && isPrime(i))
+      largest = i;
   }
-{% endhighlight %}
+  return largest;
+}
+```
 
 Alrighty, let's try a smaller input we're aware of the answer for: 13195.
 
@@ -42,47 +42,47 @@ Well, that's taking quite a while and we still have 7 more digits to add! Let's 
 #### The Fool meets the Magician
 Let's try using that [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) I like so much. Will the right tool help?
 
-{% highlight javascript %}
-  function sievePrimes(n){
-    var arr = [];
-    var primes = [2];
-    for(var i=0; i<n; i++){
-      arr[i] = true;
-    }
-    arr[0] = false;
-    arr[1] = false;
-    arr[2] = false;
-    for(var i=3; i<n;i+=2){
-      if(arr[i] !== false){
-        arr[i] = false;
-        primes.push(i);
-        for(var j=i; j<n;j+=i){
-          arr[j] = false;
-        }
+```javascript
+function sievePrimes(n){
+  var arr = [];
+  var primes = [2];
+  for(var i=0; i<n; i++){
+    arr[i] = true;
+  }
+  arr[0] = false;
+  arr[1] = false;
+  arr[2] = false;
+  for(var i=3; i<n;i+=2){
+    if(arr[i] !== false){
+      arr[i] = false;
+      primes.push(i);
+      for(var j=i; j<n;j+=i){
+        arr[j] = false;
       }
-    }    
-    return primes;
-  }
-  var primes = sievePrimes(2000000);
-  function isPrime(n){
-    for(var i=0; i<primes.length; i++){
-      if(primes[i] === n)
-        return true;
-      if(primes[i] > n)
-        return false;
     }
-    return false;
+  }    
+  return primes;
+}
+var primes = sievePrimes(2000000);
+function isPrime(n){
+  for(var i=0; i<primes.length; i++){
+    if(primes[i] === n)
+      return true;
+    if(primes[i] > n)
+      return false;
   }
+  return false;
+}
 
-  function getLargestPrimeFactor(n){
-    var largest = 0;
-    for(var i=0; i<n; i++){
-      if(n % i === 0 && isPrime(i))
-        largest = i;
-    }
-    return largest;
+function getLargestPrimeFactor(n){
+  var largest = 0;
+  for(var i=0; i<n; i++){
+    if(n % i === 0 && isPrime(i))
+      largest = i;
   }
-{% endhighlight %}
+  return largest;
+}
+```
 
 the average iteration from 100 took:
 0.14749999999999885 ms
@@ -94,22 +94,22 @@ Let's calm down, take a step back and figure out what we actually want.
 The largest prime factor. So we need to find primes and determine if they are factors, or find factors and determine if they are prime...right?
 Why not just find the prime factors directly?
 
-{% highlight javascript %}
-  function getSolution(){
-    var n = 600851475143;
-    var half = Math.floor(n/2);
-    for(var i=2; i<half; i++){
-      if(n%i === 0){
-        //divide the number by the factor
-        n = n/i;
-        //The last factor will be the largest
-        if(n === 1)
-          return i;
-        i--; //make sure duplicate factors are caught
-      }
+```javascript
+function getSolution(){
+  var n = 600851475143;
+  var half = Math.floor(n/2);
+  for(var i=2; i<half; i++){
+    if(n%i === 0){
+      //divide the number by the factor
+      n = n/i;
+      //The last factor will be the largest
+      if(n === 1)
+        return i;
+      i--; //make sure duplicate factors are caught
     }
   }
-{% endhighlight %}
+}
+```
 
 1. Iterate up until half of the number.
   * There is no way ∃ n ∋ k/2 < n < k && k % n == 0 where n and k are integers.

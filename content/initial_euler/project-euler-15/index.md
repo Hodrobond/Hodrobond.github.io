@@ -17,36 +17,36 @@ description: Euler Problem 15
 
 Recursive:
 
-{% highlight javascript %}
-  function countRoutes(m, n){
-    if(n === 0 || m === 0)
-      return 1;
-    return countRoutes(m, n - 1) + countRoutes(m - 1, n);
-  }
-{% endhighlight %}
+```javascript
+function countRoutes(m, n){
+  if(n === 0 || m === 0)
+    return 1;
+  return countRoutes(m, n - 1) + countRoutes(m - 1, n);
+}
+```
 
 Alrighty, slow as a turtle. Let's look at this for a small m/n and see what we can figure out!<br/>
 For `4` we check the routes of `(3,2)` and `(2,3)` which each in turn call `(2,2)`. Recalculation is an enemy here and it multiplies faster than bacteria, so let's see if the mysticism of [memoization](https://stackoverflow.com/questions/30386943/how-to-create-a-memoize-function) can help us *magic hand wave* away some of that tedium.
 
-{% highlight javascript %}
-  function outerCountRoutes(m,n){
-    var routesArr = new Array(m+1);
-    for(var i=0; i<=m; i++){
-      routesArr[i] = new Array(n+1);
-      for(var j=0; j<=n; j++){
-        routesArr[i][j] = false;
-      }
+```javascript
+function outerCountRoutes(m,n){
+  var routesArr = new Array(m+1);
+  for(var i=0; i<=m; i++){
+    routesArr[i] = new Array(n+1);
+    for(var j=0; j<=n; j++){
+      routesArr[i][j] = false;
     }
-    return countRoutes(m,n);
-
-    function countRoutes(m, n){
-      if(routesArr[m][n])
-        return routesArr[m][n];
-      if(n === 0 || m === 0)
-        return 1;
-      routesArr[m][n] = countRoutes(m, n - 1) + countRoutes(m - 1, n);
-
-      return routesArr[m][n];
-    }    
   }
-{% endhighlight %}
+  return countRoutes(m,n);
+
+  function countRoutes(m, n){
+    if(routesArr[m][n])
+      return routesArr[m][n];
+    if(n === 0 || m === 0)
+      return 1;
+    routesArr[m][n] = countRoutes(m, n - 1) + countRoutes(m - 1, n);
+
+    return routesArr[m][n];
+  }    
+}
+```

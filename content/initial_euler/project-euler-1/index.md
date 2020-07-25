@@ -33,32 +33,32 @@ From inspection, it looks like #1 will run faster, let's see if I'm right using 
 
 Running attempt #1 1000 times and taking the average resulted in: 0.004790000021457672 ms
 
-  {% highlight javascript %}
-    var sum = 0;
-    for(var i=0; i< 1000; i++){
-    if(i % 5 === 0 || i % 3 === 0){
-      sum += i;
-        }
+```javascript
+var sum = 0;
+for(var i=0; i< 1000; i++){
+if(i % 5 === 0 || i % 3 === 0){
+  sum += i;
     }
-    return sum
-  {% endhighlight %}
+}
+return sum
+```
 
 Running attempt #2 1000 times and taking the average resulted in: 0.04011499987542629 ms
 
-{% highlight javascript %}
-  var arr = [];
-  var sum = 0;
-  for(var i=3; i<1000; i+=3){
-    arr[i] = true;
-  }
-  for(var i=5; i<1000; i+=5){
-    arr[i] = true;
-  }
-  for(var i=0; i<1000; i++){
-    if(arr[i] === true)
-      sum += i;
-  }
-{% endhighlight %}
+```javascript
+var arr = [];
+var sum = 0;
+for(var i=3; i<1000; i+=3){
+  arr[i] = true;
+}
+for(var i=5; i<1000; i+=5){
+  arr[i] = true;
+}
+for(var i=0; i<1000; i++){
+  if(arr[i] === true)
+    sum += i;
+}
+```
 
 So it looks like our first attempt was quicker by a factor of about *10x*.
 

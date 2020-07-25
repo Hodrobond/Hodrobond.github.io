@@ -57,89 +57,89 @@ If we look at the left-most numbers on the top: 08, 49, 81, 52. We can see that 
 
 For starters, I'd like to massage the input into a 2d array, in this example I'm assuming the input is space-separated numbers.
 
-{% highlight javascript %}
-  function createArray(input){
-    var tempArr = input.split(" ");
-    var length = Math.sqrt(tempArr.length);
-    var arr = new Array(length);
-    var count = 0;
-    for(var i=0; i<length; i++){
-      arr[i] = new Array(length);
-      for(var j=0; j<length; j++){
-        arr[i][j] = tempArr[count];
-        count++;
-      }
+```javascript
+function createArray(input){
+  var tempArr = input.split(" ");
+  var length = Math.sqrt(tempArr.length);
+  var arr = new Array(length);
+  var count = 0;
+  for(var i=0; i<length; i++){
+    arr[i] = new Array(length);
+    for(var j=0; j<length; j++){
+      arr[i][j] = tempArr[count];
+      count++;
     }
-    return arr;
   }
-  var arrString = "08 02 22 ..."
-  var arr2d = createArray(arrString);
-{% endhighlight %}
+  return arr;
+}
+var arrString = "08 02 22 ..."
+var arr2d = createArray(arrString);
+```
 
 Then let's create some helper functions for retrieving the products along those four directions we determined (Please note, the getProducts are safeguarded against accessing out-of-bounds by returning 0):
 
-{% highlight javascript %}
-  function getRightProduct(arr, y, x){
-    if(x+4 > arr.length)
-      return 0;
-    var product = 1;
-    for(var i=0; i<4; i++){
-      product *= arr[y][x+i];
-    }
-    return product;
+```javascript
+function getRightProduct(arr, y, x){
+  if(x+4 > arr.length)
+    return 0;
+  var product = 1;
+  for(var i=0; i<4; i++){
+    product *= arr[y][x+i];
   }
+  return product;
+}
 
-  function getDownProduct(arr, y, x){
-    if(y+4 > arr.length)
-      return 0;
-    var product = 1;
-    for(var i=0; i<4; i++){
-      product *= arr[y+i][x];
-    }
-    return product;
+function getDownProduct(arr, y, x){
+  if(y+4 > arr.length)
+    return 0;
+  var product = 1;
+  for(var i=0; i<4; i++){
+    product *= arr[y+i][x];
   }
+  return product;
+}
 
-  function getDownRightProduct(arr, y, x){
-    if(y+4 > arr.length || x+4 > arr.length)
-      return 0;
-    var product = 1;
-    for(var i=0; i<4; i++){
-      product *= arr[y+i][x+i];
-    }
-    return product;
+function getDownRightProduct(arr, y, x){
+  if(y+4 > arr.length || x+4 > arr.length)
+    return 0;
+  var product = 1;
+  for(var i=0; i<4; i++){
+    product *= arr[y+i][x+i];
   }
+  return product;
+}
 
-  function getDownLeftProduct(arr, y, x){
-    if(y+4 > arr.length || x-3 < 0)
-      return 0;
-    var product = 1;
-    for(var i=0; i<4; i++){
-      product *= arr[y+i][x-i];
-    }
-    return product;
+function getDownLeftProduct(arr, y, x){
+  if(y+4 > arr.length || x-3 < 0)
+    return 0;
+  var product = 1;
+  for(var i=0; i<4; i++){
+    product *= arr[y+i][x-i];
   }
-{% endhighlight %}
+  return product;
+}
+```
 
 And then we tie everything together:
 
-{% highlight javascript %}
-  function getSolution(arr){
-    var arr = "08 02 22 ..."
-    var arr = createArray(arr);
-    var highest = 0;
-    for(var i=0; i<arr.length; i++){
-      for(var j=0; j<arr[i].length; j++){
-        var right = getRightProduct(arr, j, i);
-        var down = getDownProduct(arr, j, i);
-        var downRight = getDownRightProduct(arr, j, i);
-        var downLeft = getDownLeftProduct(arr, j, i);
-        var tempMax = Math.max(right, down, downRight, downLeft);
-        highest = (tempMax > highest) ? tempMax : highest;
-      }
+```javascript
+function getSolution(arr){
+  var arr = "08 02 22 ..."
+  var arr = createArray(arr);
+  var highest = 0;
+  for(var i=0; i<arr.length; i++){
+    for(var j=0; j<arr[i].length; j++){
+      var right = getRightProduct(arr, j, i);
+      var down = getDownProduct(arr, j, i);
+      var downRight = getDownRightProduct(arr, j, i);
+      var downLeft = getDownLeftProduct(arr, j, i);
+      var tempMax = Math.max(right, down, downRight, downLeft);
+      highest = (tempMax > highest) ? tempMax : highest;
     }
-    return highest;
   }
-{% endhighlight %}
+  return highest;
+}
+```
 
 <div id="example-anchor" class="number-block"></div>
 <div id="current-anchor"></div>
