@@ -1,4 +1,90 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Contemplating Imponderables]]></title><description><![CDATA[Contemplating Imponderables]]></description><link>https://gatsby-starter-blog-demo.netlify.app</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 04 Aug 2020 03:38:39 GMT</lastBuildDate><item><title><![CDATA[Redesign]]></title><description><![CDATA[Previously I was using this as a space to have some fun with Euler. Might as well take some living notes of “Front End” in 2020. Original…]]></description><link>https://gatsby-starter-blog-demo.netlify.app/redesign/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.app/redesign/</guid><pubDate>Mon, 03 Aug 2020 20:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Previously I was using this as a space to have some fun with Euler.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Contemplating Imponderables]]></title><description><![CDATA[Contemplating Imponderables]]></description><link>https://gatsby-starter-blog-demo.netlify.app</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 18 Aug 2020 03:42:24 GMT</lastBuildDate><item><title><![CDATA[Continuous Integration (P1)]]></title><description><![CDATA[Continuous integration I had a fun discussion related to Continuous Integration. I wanted to write some notes down in case that discussion…]]></description><link>https://gatsby-starter-blog-demo.netlify.app/08_17_CI/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.app/08_17_CI/</guid><pubDate>Mon, 17 Aug 2020 20:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Continuous integration&lt;/h3&gt;
+&lt;p&gt;I had a fun discussion related to Continuous Integration. I wanted to write some notes down in case that discussion happens again.&lt;/p&gt;
+&lt;p&gt;There’s a million sets of notes out there, but here’s my journey into setting up Jenkins locally.&lt;/p&gt;
+&lt;h3&gt;Deciding on a CI service&lt;/h3&gt;
+&lt;p&gt;Considering this is a side-project, low/no cost.&lt;/p&gt;
+&lt;p&gt;Minimal Feature requirements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ability to receive Github webhooks related to &lt;code class=&quot;language-text&quot;&gt;pull requests&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;merging&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Ability to pull code from repo and perform script actions (&lt;code class=&quot;language-text&quot;&gt;npm i&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;npm run build&lt;/code&gt;, deploy to server)&lt;/li&gt;
+&lt;li&gt;Ability to report success and failure of actions (tests)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://circleci.com/&quot;&gt;CircleCI&lt;/a&gt; is a good frontrunner, has free credits but is ultimately a paid service for larger scales&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://travis-ci.com/&quot;&gt;Travis CI&lt;/a&gt; is another option, but is also paid&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/&quot;&gt;Jenkins&lt;/a&gt; is free + open source&lt;/p&gt;
+&lt;p&gt;There’s probably more, chose Jenkins.&lt;/p&gt;
+&lt;h3&gt;Preparation to configure Jenkins&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/Hodrobond/BlogComponents&quot;&gt;Had a repository that exists&lt;/a&gt;, which I’ll be using for testing.&lt;/p&gt;
+&lt;p&gt;Used &lt;a href=&quot;https://brew.sh/&quot;&gt;brew&lt;/a&gt; to install Jenkins&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;brew install jenkins-lts
+jenkins-lts&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Added the &lt;code class=&quot;language-text&quot;&gt;GitHub Pull Request Builder&lt;/code&gt; (&lt;code class=&quot;language-text&quot;&gt;v1.42.1&lt;/code&gt;) package&lt;/p&gt;
+&lt;p&gt;Used &lt;a href=&quot;https://ngrok.com/&quot;&gt;ngrok&lt;/a&gt; or some other port-tunnelling service to expose the Jenkins port to the world&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;ngrok http 8080&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Update repository settings to send webhook events to Jenkins
+&lt;code class=&quot;language-text&quot;&gt;repository&lt;/code&gt; —&gt; &lt;code class=&quot;language-text&quot;&gt;settings&lt;/code&gt; —&gt; &lt;code class=&quot;language-text&quot;&gt;webhooks&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;I’ve added two:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;https://&amp;lt;ngrok_address&amp;gt;/github-webhook/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Handles most webhook events (merge, push, etc)&lt;/li&gt;
+&lt;li&gt;Listens to &lt;code class=&quot;language-text&quot;&gt;just the push event&lt;/code&gt; (merges count)&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;https://&amp;lt;ngrok_address&amp;gt;/ghprbhook/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Handles triggers based on pull request submission&lt;/li&gt;
+&lt;li&gt;Only listens to &lt;code class=&quot;language-text&quot;&gt;Pull Request&lt;/code&gt; events&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If Github verifies the initial ping, you should have green checkmarks - and you should be set from Github’s side.&lt;/p&gt;
+&lt;h3&gt;Jenkins Project Settings (Test on Pull Request)&lt;/h3&gt;
+&lt;p&gt;Freestyle project, I went with &lt;code class=&quot;language-text&quot;&gt;node&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;General&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Project URL should NOT include &lt;code class=&quot;language-text&quot;&gt;.git&lt;/code&gt;, ex: &lt;code class=&quot;language-text&quot;&gt;https://github.com/Hodrobond/BlogComponents&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Source Code Management&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;I’ve got Github, repository URL does include &lt;code class=&quot;language-text&quot;&gt;.git&lt;/code&gt;: &lt;code class=&quot;language-text&quot;&gt;https://github.com/Hodrobond/BlogComponents.git&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Credentials should ideally be a separate &lt;code class=&quot;language-text&quot;&gt;jenkins&lt;/code&gt; user for handling access. Local POC, used my own.&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;Branches to build&lt;/code&gt; is empty (or &lt;code class=&quot;language-text&quot;&gt;**&lt;/code&gt;, listen to all branches for PRs)&lt;/li&gt;
+&lt;li&gt;name: &lt;code class=&quot;language-text&quot;&gt;origin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;refspec: &lt;code class=&quot;language-text&quot;&gt;+refs/pull/*:refs/remotes/origin/pr/*&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Build Triggers&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; checked disabled&gt; GitHub Pull Request Builder&lt;/li&gt;
+&lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; checked disabled&gt; Use github hooks for build triggering&lt;/li&gt;
+&lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; checked disabled&gt; GitHub hook trigger for GITScm polling&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Build Command&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Mine is just ensuring the test cases pass:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm i
+lerna bootstrap --hoist
+npm run build
+npm test&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then when a Pull Request is initiated, it should kick off the Jenkins job, and &lt;a href=&quot;https://github.com/Hodrobond/BlogComponents/pull/6&quot;&gt;report back to Github&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Jenkins Project Settings (Deploy on Merge)&lt;/h3&gt;
+&lt;p&gt;Differences from above:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Source Code Management&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Branch specifier &lt;code class=&quot;language-text&quot;&gt;*/master&lt;/code&gt;, should probably just be &lt;code class=&quot;language-text&quot;&gt;master&lt;/code&gt; so forks can’t trigger anything&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Build Triggers&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; disabled&gt; GitHub Pull Request Builder&lt;/li&gt;
+&lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; checked disabled&gt; GitHub hook trigger for GITScm polling&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Build&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let’s just act like publishing Storybook is a &lt;code class=&quot;language-text&quot;&gt;deploy&lt;/code&gt; while I figure out best practices for Lerna in CI&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm i
+lerna bootstrap --hoist
+npm run build
+npm run check-types
+npm run build-storybook
+npm run deploy-storybook&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Results&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;PR Triggered tests which were reported back (can configure additional settings in Git to block merge unless all checks pass). &lt;a href=&quot;https://github.com/Hodrobond/BlogComponents/pull/6&quot;&gt;Here’s&lt;/a&gt; an example that’s unmerged.&lt;/li&gt;
+&lt;li&gt;Deploy on merge&lt;/li&gt;
+&lt;li&gt;Updated &lt;a href=&quot;https://hodrobond.github.io/BlogComponents/&quot;&gt;storybook&lt;/a&gt;!&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Redesign]]></title><description><![CDATA[Previously I was using this as a space to have some fun with Euler. Might as well take some living notes of “Front End” in 2020. Original…]]></description><link>https://gatsby-starter-blog-demo.netlify.app/08_03_redesign/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.app/08_03_redesign/</guid><pubDate>Mon, 03 Aug 2020 20:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Previously I was using this as a space to have some fun with Euler.&lt;/p&gt;
 &lt;p&gt;Might as well take some living notes of “Front End” in 2020.&lt;/p&gt;
 &lt;h3&gt;Original:&lt;/h3&gt;
 &lt;ul&gt;
@@ -23,6 +109,13 @@
 &lt;li&gt;&lt;a href=&quot;https://storybook.js.org/&quot;&gt;Storybook&lt;/a&gt; for easing development experience&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Why that’s important:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;It’s possible to &lt;a href=&quot;https://hodrobond.github.io/BlogComponents/?path=/story/components-collected-blogpostcard--single-card&quot;&gt;serve storybook&lt;/a&gt; to view the component library&lt;/li&gt;
+&lt;li&gt;Components are no longer scoped to an individual project&lt;/li&gt;
+&lt;li&gt;Component sibling-dependencies are handled pretty well in Lerna&lt;/li&gt;
+&lt;li&gt;Safety, typechecking, easier development/debugging process&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Let's Solve Project Euler Problem 15]]></title><description><![CDATA[Lattice paths Starting in the top left corner of a 2×2 grid, and only being able to move to the right and down, there are exactly 6 routes…]]></description><link>https://gatsby-starter-blog-demo.netlify.app/project-euler-15/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.app/project-euler-15/</guid><pubDate>Tue, 27 Jun 2017 02:00:00 GMT</pubDate><content:encoded>&lt;style&gt;
   .image-wrapper{
     text-align: center;
